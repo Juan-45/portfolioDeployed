@@ -10,7 +10,7 @@ const root = createRoot(rootElement);
 root.render(
   <StrictMode>
     <BrowserRouter
-      basename='portfolio/' /*http://Juan-45.github.io/portfolio */
+      basename='portfolioDeployed/' /*http://Juan-45.github.io/portfolio */
     >
       <App />
     </BrowserRouter>
