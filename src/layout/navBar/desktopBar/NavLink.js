@@ -24,6 +24,7 @@ const getStyles = ({ theme, active }) => ({
     background: theme.palette.glow.dark,
     transition: "width 0.6s ease, box-shadow 0.6s ease",
     height: "2px",
+    width: "0%",
     bottom: 0,
     boxShadow: active ? theme.glow.small : "unset",
     width: active ? "50%" : "0%",
@@ -51,6 +52,7 @@ const getStyles = ({ theme, active }) => ({
     },
     "&::before": {
       width: "2px",
+      height: "0%",
       transition: "height 0.4s ease, box-shadow 0.4s ease",
       height: active ? "100%" : "0%",
     },

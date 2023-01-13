@@ -1,8 +1,7 @@
 import AnimatedH1 from "layout/AnimatedH1";
 import FadeInText from "layout/FadeInText";
-import FlexColumn from "layout/FlexColumn";
-import PaperContainer from "layout/PaperContainer";
 import GridForAnimation from "layout/home/GridForAnimation";
+import MainAnimatedContainer from "layout/home/body/MainAnimatedContainer";
 import { Box } from "@mui/material";
 import html from "assets/images/home/toolsSample/html.svg";
 import css from "assets/images/home/toolsSample/css.svg";
@@ -20,13 +19,12 @@ import vs from "assets/images/home/toolsSample/vs.svg";
 import { theme } from "theme/theme";
 import { keyframes } from "@mui/styled-engine";
 import useTriggerOnScroll from "hooks/useTriggerOnScroll";
-import React from "react"
 
 const { keyFramesGroup } = theme;
 
 const { growingBorder, fade } = keyFramesGroup;
 
-const { bottomBorder, rightBorder, leftBorder, allBorders } = growingBorder;
+const { bottomBorder, rightBorder, leftBorder } = growingBorder;
 
 const icons = [
   html,
@@ -57,7 +55,7 @@ const icons = [
   vs,
 ];
 
-const movingBorderTime = 1; // default 0.3
+const movingBorderDuration = 1; // default 0.3
 
 const scroll = keyframes({
   to: {
@@ -65,20 +63,24 @@ const scroll = keyframes({
   },
 });
 
-const TextContainer = ({ children, triggerAnimation }) => (
+const TextContainer = ({
+  children,
+  triggerAnimation,
+  movingBorderDuration,
+}) => (
   <GridForAnimation
     sx={{
       pb: theme.spacing(3),
       "&::after": {
         //2do
         animation: triggerAnimation
-          ? `${movingBorderTime}s linear 0.3s forwards ${leftBorder.down}`
+          ? `${movingBorderDuration}s linear 0.3s forwards ${leftBorder.down}`
           : "unset",
       },
       "&::before": {
         //3ro
         animation: triggerAnimation
-          ? `${movingBorderTime}s linear 0.6s forwards ${bottomBorder.toRight}`
+          ? `${movingBorderDuration}s linear 0.6s forwards ${bottomBorder.toRight}`
           : "unset",
       },
     }}
@@ -87,26 +89,7 @@ const TextContainer = ({ children, triggerAnimation }) => (
   </GridForAnimation>
 );
 
-const Contianer = React.forwardRef(({ children, triggerAnimation }, ref) => (
-  <FlexColumn justify='center'>
-    <PaperContainer
-      ref={ref}
-      sx={{
-        border: "2px solid #fff0",
-        opacity: "0",
-        visibility: "hidden",
-        //1ro y 5to
-        animation: triggerAnimation
-          ? `0.2s cubic-bezier(0.11, 0, 0.5, 0) 0s forwards ${fade}, 2s ease 1.2s forwards ${allBorders}`
-          : "unset",
-      }}
-    >
-      {children}
-    </PaperContainer>
-  </FlexColumn>
-));
-
-const Carousel = ({ triggerAnimation }) => (
+const Carousel = ({ triggerAnimation, movingBorderDuration }) => (
   <GridForAnimation
     sx={{
       //highway-slider
@@ -118,7 +101,7 @@ const Carousel = ({ triggerAnimation }) => (
       "&::before": {
         //4to
         animation: triggerAnimation
-          ? `${rightBorder.down} ${movingBorderTime}s 0.9s forwards linear `
+          ? `${rightBorder.down} ${movingBorderDuration}s 0.9s forwards linear `
           : "unset",
       },
     }}
@@ -224,11 +207,18 @@ const Carousel = ({ triggerAnimation }) => (
 );
 
 const ToolSample = () => {
-  const { targetEl, trigger } = useTriggerOnScroll();
+  const [targetEl, trigger] = useTriggerOnScroll();
 
   return (
-    <Contianer ref={targetEl} triggerAnimation={trigger}>
-      <TextContainer triggerAnimation={trigger}>
+    <MainAnimatedContainer
+      ref={targetEl}
+      triggerAnimation={trigger}
+      bordersDelay={1.2}
+    >
+      <TextContainer
+        triggerAnimation={trigger}
+        movingBorderDuration={movingBorderDuration}
+      >
         <AnimatedH1
           str='Herramientas'
           /*1roA*/
@@ -237,7 +227,7 @@ const ToolSample = () => {
         />
         <FadeInText
           str='HTML, CSS3, JS ES6 2015, React.js V17, MUI, React Router, Axios, Formik, Yup,
-      Webpack, Babel, GitHub, Visual Studio Code, Visual Studio.'
+  Webpack, Babel, GitHub, Visual Studio Code, Visual Studio.'
           variant='body'
           type='word'
           initialDelay={1.3}
@@ -245,8 +235,11 @@ const ToolSample = () => {
           triggerAnimation={trigger}
         />
       </TextContainer>
-      <Carousel triggerAnimation={trigger} />
-    </Contianer>
+      <Carousel
+        triggerAnimation={trigger}
+        movingBorderDuration={movingBorderDuration}
+      />
+    </MainAnimatedContainer>
   );
 };
 
